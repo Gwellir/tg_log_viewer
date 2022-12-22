@@ -1,0 +1,169 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.padding-site {
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+.header {
+    vertical-align: bottom;
+}
+
+.top-string {
+    float: left;
+    margin-right: 15px;
+    display: block;
+    line-height: 35px;
+    vertical-align: bottom;
+    position: relative;
+}
+
+.top-string > a {
+    line-height: 10px;
+    vertical-align: text-bottom;
+}
+
+.header > form {
+    float: right;
+    margin: 5px;
+}
+
+.search {
+    position: relative;
+}
+
+.search > input {
+    padding: 0 4px;
+}
+
+.search > .additional-search {
+    position: absolute;
+    left: 0;
+    background-color: white;
+    padding: 2px;
+}
+
+.container {
+	max-width: 800px;
+    margin: 0 auto;
+    min-width: 540px;
+    padding: 0;
+}
+
+.paginator {
+    margin: 0 auto;
+    text-align: center;
+    font-size: 1.3em;
+}
+
+.message-entity {
+    padding: 3px;
+    border: 1px solid #ccc;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.message-entity.highlight {
+    border: 3px solid black;
+}
+
+.photo {
+    display: block;
+    max-width: 100%;
+}
+
+.sticker {
+    width: 128px;
+}
+
+.gif {
+    max-width: 100%;
+}
+
+.message-content {
+    /*margin-bottom: 0;*/
+    padding: 2px 5px;
+    border-top: 1px solid #ccc;
+}
+
+.message-entity p {
+    margin-bottom: 0;
+    font-size: 1em;
+}
+
+.message-entity p a {
+    word-break: break-all;
+}
+
+.message-header {
+    width: 100%;
+}
+
+.message-header h6 {
+    float: left;
+    margin: 0 5px;
+}
+
+.message-number > a {
+    color: #eee;
+}
+
+.message-time {
+    font-size: 0.8em;
+}
+
+.message-header h6.message-reply-to {
+    float: right;
+}
+
+.message-entity:hover .message-number > a {
+    color: #555;
+}
+
+.message-reply-to, .message-number {
+    position: relative;
+}
+
+.message-reply-to #inject {
+    right: 0;
+}
+
+.message-number #inject {
+    /*left: 0;*/
+}
+
+#inject {
+    position: fixed;
+    background-color: rgba(150, 150, 150, 0.4);
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 100;
+    padding-top: 10%;
+}
+
+#inject > .message-entity {
+    background-color: white;
+    width: 500px;
+    margin: auto;
+}
+
+#inject  .gif, #inject  .photo {
+    max-height: 500px;
+}
+
+.hidden {
+    display: none;
+}

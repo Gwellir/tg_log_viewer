@@ -1,0 +1,22 @@
+{% for message in object_list %}
+    <div class="message-entity {% if message.tg_id == highlight %}highlight{% endif %}">
+        <div class="message-header clearfix">
+            <h6 class="message-username">{{ message.username }}</h6>
+            <h6 class="message-number">#{{ message.tg_id }}</h6>
+            <h6 class="message-time">{{ message.time_stamp }}</h6>
+            {% if message.reply_to %}
+                <h6 class="message-reply-to">&gt; {{message.reply_to}}</h6>
+            {% endif %}
+        </div>
+        <div class="message-content">
+            {% if message.msg_type == 3 %}
+                <img class="photo" src="/static/media/{{ message.media }}">
+            {% elif message.msg_type == 2 %}
+                <img class="sticker" src="/static/media/{{ message.media }}">
+            {% elif message.msg_type == 1 %}
+                <video class="gif" src="/static/media/{{ message.media }}" loop autoplay></video>
+            {% endif %}
+            <p class="message-text">{{ message.content|safe }}</p>
+        </div>
+    </div>
+{% endfor %}

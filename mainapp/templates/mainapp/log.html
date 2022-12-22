@@ -1,0 +1,51 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock  %}
+
+{% block menu %}
+    {{ block.super }}
+{% endblock  %}
+
+{% block subtitle %}
+{% endblock %}
+
+{% block content %}
+    <div class="logviewer padding-site">
+        {% block messages_list %}
+            <div class="paginator">
+                {% if object_list.has_previous %}
+                    <a href="{% url 'page' object_list.previous_page_number %}">&lt;</a>
+                {% endif %}
+                <span class="current">
+                    page {{ object_list.number }} of {{ object_list.paginator.num_pages }}
+                </span>
+                {% if object_list.has_next %}
+                    <a href="{% url 'page' object_list.next_page_number %}">&gt;</a>
+                {% endif %}
+            </div>
+
+            {{ block.super }}
+
+            <div class="paginator">
+                {% if object_list.has_previous %}
+                    <a href="{% url 'page' object_list.previous_page_number %}">&lt;</a>
+                {% endif %}
+                <span class="current">
+                    page {{ object_list.number }} of {{ object_list.paginator.num_pages }}
+                </span>
+                {% if object_list.has_next %}
+                    <a href="{% url 'page' object_list.next_page_number %}">&gt;</a>
+                {% endif %}
+            </div>
+        {% endblock %}
+    </div>
+{% endblock  %}
+{% block footer %}
+    {{ block.super }}
+    <div class="copyright-links">
+<!--        <p class="copyright">© Copyright - INTERIOR 2016. All Rights Reserved.</p>-->
+    </div>
+{% endblock  %}

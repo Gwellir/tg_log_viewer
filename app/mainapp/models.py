@@ -4,6 +4,8 @@ from shutil import copy
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField, SearchVector
 from django.db import models
+from django.db.models import Count
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from mainapp.paginator import UserPaginator
@@ -33,12 +35,12 @@ class MediaFile(models.Model):
     is_downloaded = models.BooleanField(verbose_name="media downloaded flag")
     media_type = models.CharField(verbose_name='media_type as in TG log format', max_length=50, null=True, db_index=True)
     mime_type = models.CharField(verbose_name='mime_type as in TG log format', max_length=50, null=True)
-    thumbnail = models.CharField(verbose_name='path to a thumbnail bound to this message', max_length=100, blank=True)
+    thumbnail = models.CharField(verbose_name='path to a thumbnail bound to this message', max_length=255, blank=True)
     width = models.IntegerField(verbose_name="width of a media file", null=True)
     height = models.IntegerField(verbose_name="height of a media file", null=True)
     duration_seconds = models.IntegerField(verbose_name="duration of a media file", null=True)
-    file_path = models.CharField(verbose_name='path to mediafile bound to this message', max_length=100, blank=True)
-    sticker_emoji = models.CharField(verbose_name='Emoji for a sticker', max_length=2, null=True)
+    file_path = models.CharField(verbose_name='path to mediafile bound to this message', max_length=255, blank=True)
+    sticker_emoji = models.CharField(verbose_name='Emoji for a sticker', max_length=8, null=True)
     performer = models.CharField(verbose_name="Performer tag", max_length=200, null=True)
     title = models.CharField(verbose_name="composition title", max_length=200, null=True)
     hash = models.SlugField(verbose_name="CRC32 hash", max_length=8, null=True)
@@ -132,6 +134,18 @@ class Message(models.Model):
     @property
     def message_page_num(self):
         return (self.pk - 1) // LOG_MESSAGES_PER_PAGE + 1
+
+    @cached_property
+    def distinct_users(self):
+        users_sorted = (
+            Message.objects
+            .values('from_name')
+            .annotate(count=Count('from_name'))
+            .order_by('-count')
+            .all()
+        )
+
+        return [user['from_name'] for user in users_sorted]
 
     def __str__(self):
         return f'#{self.tg_id} -> {self.from_name} sent this at {self.date}\n' \

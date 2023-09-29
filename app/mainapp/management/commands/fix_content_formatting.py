@@ -22,21 +22,27 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         # messages = Message.objects.order_by('pk').all()
         # ltag_count = rtag_count = link_count = 0
-        for messages in get_bulk(1000, offset=1807748):
+        for messages in get_bulk(1000, offset=2495976):
             # with transaction.atomic():
             updated = []
             for message in messages:
-                if message.content.find('[') >= 0:
-                    message.content = re.sub(r'\[.*?\]\(https://t\.me/anime_lepra/(\d+)\)',
-                                             r'<a href="/goto/\1">message#\1</a>', message.content)
-                    for match in re.finditer(r'(\[(.*?)\]\((.*?)\))', message.content):
-                        res = match.groups()
-                        message.content = message.content.replace(
-                            res[0],
-                            f'<a href="{res[2]}">🌐'
-                            f'{res[1] if res[1] else urllib.parse.urlparse(res[2]).hostname}'
-                            f'</a>')
+                if message.content.find('></a>') >= 0:
+                    message.content = message.content.replace('></a>', '>🌐</a>')
+                # if (message.content.find('a href="https://t.me/') >= 0) and not (message.content.find('">@') >= 0):
+                #     message.content = re.sub(r'<a href="https://t\.me/([\w\W\d_]+)>(.*)</a>',
+                #                              r'<a href="https://t.me/\1)">\2</a>', message.content)
                     updated.append(message)
+                # if message.content.find('[') >= 0:
+                #     message.content = re.sub(r'\[.*?\]\(https://t\.me/anime_lepra/(\d+)\)',
+                #                              r'<a href="/goto/\1">message#\1</a>', message.content)
+                #     for match in re.finditer(r'(\[(.*?)\]\((.*?)\))', message.content):
+                #         res = match.groups()
+                #         message.content = message.content.replace(
+                #             res[0],
+                #             f'<a href="{res[2]}">🌐'
+                #             f'{res[1] if res[1] else urllib.parse.urlparse(res[2]).hostname}'
+                #             f'</a>')
+                #     updated.append(message)
                 if message.content.find('\n') >= 0:
                     message.content = re.sub(r'\n', r'<br>', message.content)
                     updated.append(message)

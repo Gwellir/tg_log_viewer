@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Message',
             fields=[
+                ('tg_id', models.PositiveIntegerField(verbose_name="Telegram log id", unique=True)),
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('time_stamp', models.DateTimeField(verbose_name='Message sending time')),
                 ('username', models.CharField(max_length=100, verbose_name='TG user first name')),

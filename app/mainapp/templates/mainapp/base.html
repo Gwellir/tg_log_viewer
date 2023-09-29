@@ -51,22 +51,29 @@
             {% for message in object_list %}
                 <div class="message-entity {% if message.tg_id == highlight %}highlight{% endif %}" id="{{ message.tg_id }}">
                     <div class="message-header clearfix">
-                        <h6 class="message-username">{{ message.username }}</h6>
+                        <h6 class="message-username">{{ message.from_name }}</h6>
                         {% comment %}<h6 class="message-number"><a href="{% url 'expand' message.tg_id %}#{{ message.tg_id }}">#{{ message.tg_id }}</a></h6>{% endcomment %}
                         <h6 v-if="isSearch" class="message-number" @mouseover="peek($event)" @mouseleave="cleanUp"><a href="{% url 'goto' message.tg_id %}" data-id="{{message.tg_id}}">#{{ message.tg_id }}</a></h6>
                         <h6 v-else class="message-number"><a href="{% url 'goto' message.tg_id %}">#{{ message.tg_id }}</a></h6>
-                        <h6 class="message-time">{{ message.time_stamp }}</h6>
+                        <h6 class="message-time">{{ message.date }}</h6>
                         {% if message.reply_to %}
-                            <h6 @mouseover="peek($event)" @mouseleave="cleanUp" class="message-reply-to"><a href="{% url 'goto' message.reply_to %}" data-id="{{message.reply_to}}">&gt; {{message.reply_to}}</a></h6>
+                            <h6 @mouseover="peek($event)" @mouseleave="cleanUp" class="message-reply-to">
+                                <a
+                                        href="{% url 'goto' message.reply_to_message_id %}"
+                                        data-id="{{message.reply_to_message_id}}"
+                                > {{message.reply_to_message_id}}</a>
+                            </h6>
                         {% endif %}
                     </div>
                     <div class="message-content">
-                        {% if message.msg_type == 3 %}
-                            <img class="photo" src="/static/media/{{ message.media }}">
-                        {% elif message.msg_type == 2 %}
-                            <img class="sticker" src="/static/media/{{ message.media }}">
-                        {% elif message.msg_type == 1 %}
-                            <video class="gif" src="/static/media/{{ message.media }}" loop autoplay></video>
+                        {% if message.media.media_type == "photo" %}
+                            <img class="photo" src="/media/{{ message.media.file_path }}">
+                        {% elif message.media.media_type == "sticker" %}
+                            <img class="sticker" src="/media/{{ message.media.file_path }}">
+                        {% elif message.media.media_type == "animation" %}
+                            <video class="gif" src="/media/{{ message.media.file_path }}" loop autoplay></video>
+                        {% elif message.media.media_type == "file" %}
+                            <a class="file" href="/media/{{ message.media.file_path }}"> 💾 Скачать ({{message.media.file_path}}) </a><br>
                         {% endif %}
                         <p class="message-text">{{ message.content|safe }}</p>
                     </div>

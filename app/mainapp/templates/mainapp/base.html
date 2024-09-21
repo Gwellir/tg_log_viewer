@@ -31,7 +31,7 @@
                             <input name="user" list="userlist" placeholder="Username" value="{% if current_user %}{{ current_user }}{% endif %}">
                             <datalist id="userlist">
                             {% for user in user_list %}
-                                <option value="{{user.username}}">
+                                <option value="{{user.from_name}}">
                             {% endfor %}
                             </datalist>
                         </div>
@@ -56,12 +56,12 @@
                         <h6 v-if="isSearch" class="message-number" @mouseover="peek($event)" @mouseleave="cleanUp"><a href="{% url 'goto' message.tg_id %}" data-id="{{message.tg_id}}">#{{ message.tg_id }}</a></h6>
                         <h6 v-else class="message-number"><a href="{% url 'goto' message.tg_id %}">#{{ message.tg_id }}</a></h6>
                         <h6 class="message-time">{{ message.date }}</h6>
-                        {% if message.reply_to %}
+                        {% if message.reply_to_message_id %}
                             <h6 @mouseover="peek($event)" @mouseleave="cleanUp" class="message-reply-to">
                                 <a
                                         href="{% url 'goto' message.reply_to_message_id %}"
                                         data-id="{{message.reply_to_message_id}}"
-                                > {{message.reply_to_message_id}}</a>
+                                >&gt; {{message.reply_to_message_id}}</a>
                             </h6>
                         {% endif %}
                     </div>

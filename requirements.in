@@ -1,2 +1,9 @@
-django
+django<5.0
 psycopg2
+django-debug-toolbar<5
+mysqlclient
+alive-progress
+gunicorn
+
+python-dotenv
+beautifulsoup4<5

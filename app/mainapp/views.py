@@ -34,8 +34,7 @@ def log(request, page=1):
     title = 'log viewer'
 
     log_messages = Message.objects.order_by('tg_id')
-    # user_list = Message.objects.values('username').distinct().order_by('username').all()
-    user_list = []
+    user_list = Message.get_distinct_users()
 
     paginator = UserPaginator(log_messages, LOG_MESSAGES_PER_PAGE)
     try:
@@ -67,7 +66,7 @@ class SearchResultsView(ListView):
         context['title'] = f"Search: '{self.request.GET.get('query')}'"
         if self.request.GET.get('user'):
             context['title'] += f' ({self.request.GET.get("user")})'
-        context['user_list'] = Message.distinct_users
+        context['user_list'] = Message.get_distinct_users()
         context['current_user'] = self.request.GET.get('user')
         return context
 

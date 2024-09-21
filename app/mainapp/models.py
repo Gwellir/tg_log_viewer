@@ -1,11 +1,11 @@
 import os
+from functools import lru_cache
 from shutil import copy
 
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField, SearchVector
 from django.db import models
 from django.db.models import Count
-from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from mainapp.paginator import UserPaginator
@@ -135,17 +135,18 @@ class Message(models.Model):
     def message_page_num(self):
         return (self.pk - 1) // LOG_MESSAGES_PER_PAGE + 1
 
-    @cached_property
-    def distinct_users(self):
+    @classmethod
+    @lru_cache
+    def get_distinct_users(cls):
         users_sorted = (
-            Message.objects
+            cls.objects
             .values('from_name')
             .annotate(count=Count('from_name'))
             .order_by('-count')
             .all()
         )
 
-        return [user['from_name'] for user in users_sorted]
+        return users_sorted
 
     def __str__(self):
         return f'#{self.tg_id} -> {self.from_name} sent this at {self.date}\n' \

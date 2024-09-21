@@ -167,3 +167,20 @@
 .hidden {
     display: none;
 }
+
+/* spoilers */
+
+details {
+  display: inline;  /* текст на текущей строке */
+}
+details[open] {
+  display: contents;  /* спрятанный текст на текущей строке (в Google Chrome отсутствует реализация на момент написания статьи) */
+}
+details summary {
+  list-style-type: "[...]";  /* такие слова, как «Ещё», «Читать дальше», «Нажать» лучше вносить в list-style-type, чтобы они не были видны в браузерах, не поддерживающих тег details (в Google Chrome отсутствует реализация на момент написания статьи) */
+  color: blue;
+  cursor: pointer;
+}
+details[open] summary {
+  display: none;
+}

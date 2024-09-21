@@ -1,15 +1,15 @@
 import re
-from pprint import pprint
 
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.contrib.postgres.search import SearchQuery
+from django.core.paginator import PageNotAnInteger, EmptyPage
 from django.shortcuts import render, HttpResponseRedirect
-from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 from tg_log_viewer.settings import LOG_MESSAGES_PER_PAGE
 
 from .models import Message
+from .paginator import UserPaginator
 
 
 # todo should be either prepared in the DB or converted by js on user's side
@@ -33,11 +33,11 @@ def main(request):
 def log(request, page=1):
     title = 'log viewer'
 
-    log_messages = Message.objects.order_by('tg_id').all()
+    log_messages = Message.objects.order_by('tg_id')
     # user_list = Message.objects.values('username').distinct().order_by('username').all()
     user_list = []
 
-    paginator = Paginator(log_messages, LOG_MESSAGES_PER_PAGE)
+    paginator = UserPaginator(log_messages, LOG_MESSAGES_PER_PAGE)
     try:
         msg_paginator = paginator.page(page)
     except PageNotAnInteger:
@@ -67,8 +67,7 @@ class SearchResultsView(ListView):
         context['title'] = f"Search: '{self.request.GET.get('query')}'"
         if self.request.GET.get('user'):
             context['title'] += f' ({self.request.GET.get("user")})'
-        # context['user_list'] = Message.objects.values('username').distinct().order_by('username').all()
-        context['user_list'] = []
+        context['user_list'] = Message.distinct_users
         context['current_user'] = self.request.GET.get('user')
         return context
 
@@ -77,9 +76,9 @@ class SearchResultsView(ListView):
         user = self.request.GET.get('user')
         qs = Message.objects.order_by('tg_id')
         if key != '':
-            qs = qs.filter(content__icontains=key)
+            qs = qs.filter(vector__vector=SearchQuery(key, config='russian'))
         if user != '':
-            qs = qs.filter(username=user)
+            qs = qs.filter(from_name__iexact=user)
         messages = qs.all()
         return messages
 

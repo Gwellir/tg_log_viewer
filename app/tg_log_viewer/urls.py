@@ -28,7 +28,8 @@ urlpatterns = [
     path('search/', mainapp.SearchResultsView.as_view(), name='search'),
     path('peek/<int:pk>/', mainapp.peek, name='peek'),
     path('goto/<int:pk>', mainapp.goto, name='goto'),
-    path('auth/', include('authapp.urls', namespace='auth'))
+    path('auth/', include('authapp.urls', namespace='auth')),
+    path('__debug__/', include('debug_toolbar.urls')),
 ]
 
 if settings.DEBUG:
